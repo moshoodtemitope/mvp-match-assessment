@@ -56,8 +56,6 @@ export const GenerateReports = () => {
 
     const [startDate, onStartChange] = useState(null);
     const [endDate, onEndChange] = useState(null);
-    
-    const [sortMode, setSortMode] = useState("asc");
 
     const [projectSelected, setProject] = useState("");
     const [allProjects, saveProjects] = useState<any[]>([]);
@@ -69,43 +67,22 @@ export const GenerateReports = () => {
     let labelsCollections: any = [];
     let totalsCollections: any = [];
     let colorCollections: any = [];
-
-    const getInitials = (name) => {
+    
+    const getInitials =  (name) =>{
         var parts = name.split(' ')
         var initials = ''
         for (var i = 0; i < parts.length; i++) {
-            if (parts[i].length > 0 && parts[i] !== '') {
-                initials += parts[i][0]
-            }
+          if (parts[i].length > 0 && parts[i] !== '') {
+            initials += parts[i][0]
+          }
         }
         return initials
-    }
-
-    const formatDate = (date) => {
-        let dateToFormat = new Date(date)
-        return `${dateToFormat.getDate()}.${dateToFormat.getMonth() + 1}.${dateToFormat.getFullYear()}`
-    }
-
-    // Sort By Date
-    const sortByDate = (array:any[],order?:any) => {
-
-        if (order === "asc") {
-            array.sort((item1?: any, item2?: any)=> new Date(item1?.created).getTime() - new Date(item2?.created).getTime())
-            
-        }
-        if  (order === "desc"){
-            array.sort((item1?: any, item2?: any)=> new Date(item2?.created).getTime() - new Date(item1?.created).getTime())
-            
-        }
-
-       
-    }
-
+      }
 
 
     useEffect(() => {
         const fetchUsers = async () => {
-
+            
             let result = await axios.request({
                 method: 'GET',
                 url: paths.GET_USERS,
@@ -154,22 +131,14 @@ export const GenerateReports = () => {
                 });
 
                 setIsLoadingReport(false)
-                let resultData = result.data.data.
-                    
-                    setReportData(result.data.data);
+                
+                setReportData(result.data.data);
 
             }
             getAReport()
         }
 
     }, [reportFilters])
-
-    useEffect (()=>{
-
-        sortByDate(reportData, sortMode)
-
-    },[sortMode])
-
 
     const setReportParams = () => {
 
@@ -225,7 +194,7 @@ export const GenerateReports = () => {
                     gatewayTotal += report.amount
                 }
             })
-
+            
         } else {
             reportData.forEach((report: any) => {
                 gatewayTotal += report.amount;
@@ -257,10 +226,9 @@ export const GenerateReports = () => {
                 <tbody>
                     {
                         reportData.map((eachData, index) => {
-                            // console.log(formatDate(eachData.created));
                             return (
                                 <tr key={index}>
-                                    <td>{formatDate(eachData.created)}</td>
+                                    <td>{eachData.created}</td>
                                     {hasGateways && <td>{getwayNamebyId(eachData.gatewayId)}</td>}
                                     <td>{eachData.paymentId} </td>
                                     <td>{eachData.amount} USD</td>
@@ -289,7 +257,7 @@ export const GenerateReports = () => {
      * Render A Chart
      */
     const GenerateReportChart = ({ data, colors, labels }: ChartGenerator) => {
-
+        
         let chartData = {
             labels,
             datasets: [{
@@ -319,7 +287,7 @@ export const GenerateReports = () => {
             </div>
         )
     }
-
+     
     /**
      * No reports
     */
@@ -494,7 +462,7 @@ export const GenerateReports = () => {
      */
 
     const SingleProjectSingleGateway = () => {
-        let totalAmount = 0;
+        let totalAmount  = 0;
         reportData.forEach((report: any) => totalAmount += report.amount)
         return (
             <div className="reports-wrap">
@@ -665,10 +633,10 @@ export const GenerateReports = () => {
                     <img src={Toggle} alt="" />
                 </div>
                 {!isLoadingUser &&
-                    <div className="header-wrap-item">
-                        <div className="user-initials">{getInitials(`${userData[0].firstName} ${userData[0].lastName}`)} </div>
-                        <div className="username-txt">{userData[0].firstName} {userData[0].lastName}</div>
-                    </div>
+                <div className="header-wrap-item">
+                    <div className="user-initials">{getInitials(`${userData[0].firstName} ${userData[0].lastName}`)} </div>
+                    <div className="username-txt">{userData[0].firstName} {userData[0].lastName}</div>
+                </div>
                 }
             </div>
             <div className="page-content-wrap">
@@ -711,7 +679,7 @@ export const GenerateReports = () => {
                         <SingleProjectSingleGateway />
                     }
 
-
+                   
                 </div>
             </div>
 
